@@ -1,0 +1,10 @@
+<!-- file_upload/templates/file_upload/view_file.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<h3>File Details</h3>
+<p>Filename: <a href="{{ file.file.url }}">{{ file.file.name }}</a></p>
+<p>Filesize: {{ file.file.size | filesizeformat }}</p>
+<p>Upload Method: {{ file.upload_method }}</p>
+{% endblock %}

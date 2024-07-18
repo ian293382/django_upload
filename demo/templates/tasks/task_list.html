@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+</head>
+<body>
+    <h3>Task List</h3>
+    {% for task in tasks %}
+        <p>{{ forloop.counter }}. {{ task.name }} - {{ task.get_status_display }}</p>
+        (<a href="{% url 'demo:task_update' task.id %}">Update</a>
+        <a href="{% url 'demo:task_delete' task.id %}">Delete</a>)
+    {% endfor %}
+    <p><a href="{% url 'demo:task_create' %}">+ Add A New Task</a></p>
+</body>
+</html>
