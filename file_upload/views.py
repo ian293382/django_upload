@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.shortcuts import render, redirect,get_object_or_404
 from .models import File
-from .forms import FileUploadForm
+from .forms import FileUploadForm, FileUploadModelForm
 import os 
 import uuid 
 from django.http import JsonResponse
@@ -40,7 +40,8 @@ def view_file(request, pk):
     return render(request, 'view_file.html', {'file': file_instance})
 
 def handle_upload_file(file):
-    ext = file.name.split('.')[-1]
+    # 查看最後檔案格式 pdf png ....
+    ext = file.name.split('.')[-1] 
     file_name = '{}.{}'.format(uuid.uuid4().hex[:10], ext)
 
     file_path = os.path.join('files', file_name)
@@ -57,6 +58,20 @@ def handle_upload_file(file):
 
     return file_path
 
-
 # handle_upload_file 後面必須要包media 否則就是相對地址
 # 建議一定要寫入絕對路徑時必須要用os.path.exists 檢查是否存在 
+
+# ModelForm 處理文件上傳 可以跟 file_upload做比較 後續會有ajax 依然可以比對
+def model_form_upload(request):
+    if request.method == 'POST':
+        form = FileUploadModelForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save() # 正常我們使用form model
+            return redirect('/file/file')
+    else:
+        form = FileUploadModelForm() # 給空的讓使用者填寫
+    return render( request, 'upload_form.html',
+                    {'form': form,
+                     'heading': 'Upload files with ModelForm'
+                     }
+                  )

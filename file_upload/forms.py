@@ -14,3 +14,20 @@ class FileUploadForm(forms.Form):
             raise forms.ValidationError('Only jpg, pdf and xlsx file are allowed')
         # 驗定要 return 驗證過後的數據 只有在view中才能夠使用 form.cleaned_data.get('xxx') 才能獲取驗證後的數據
         return file
+    
+class FileUploadModelForm(forms.ModelForm):
+    class Meta:
+        model = File
+        fields = ('file', 'upload_method',)
+        widgets = {
+            'upload_method': forms.TextInput({'class': 'form-control'}),
+            'file': forms.ClearableFileInput({'class': 'form-control'}),
+        }
+
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+        ext =  file.name.split('.')[-1].lower() # 一樣偵測最後檔案名稱
+        if ext not in ['jpg','pdf', 'xlsx']:
+            raise forms.ValidationError('Only jpg, pdf and xlsx file are allowed')
+        # 驗定要 return 驗證過後的數據 只有在view中才能夠使用 form.cleaned_data.get('xxx') 才能獲取驗證後的數據
+        return file
